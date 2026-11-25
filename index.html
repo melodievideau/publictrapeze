@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Trapeze — a quiet game</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="hud">
+  <div id="score"><span id="count">0</span><label>trapezes</label></div>
+  <div id="best"></div>
+  <button id="mute" type="button" title="toggle sound (m)">sound on</button>
+</div>
+<div id="overlay">
+  <div class="card">
+    <h1>Trapeze</h1>
+    <p class="sub">a quiet game about swinging from bar to bar</p>
+    <p class="how">hold <b>SPACE</b> (or press &amp; hold anywhere) to swing<br>
+    let go on the forward swing to fly</p>
+    <p class="begin">click to begin</p>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
