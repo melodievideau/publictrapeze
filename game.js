@@ -268,7 +268,12 @@ function startGame() {
       return;
     }
     game.releaseFrom = game.pivot;
-    game.proj = { x: bob.x, y: bob.y, vx: vel.x, vy: vel.y, age: 0 };
+    const nb0 = barOf(game.next);
+    const dy = nb0.y - bob.y;
+    const disc = vel.y * vel.y + 2 * G * dy;
+    const tFlight = disc > 0 ? (-vel.y + Math.sqrt(disc)) / G : 0.6;
+    const spin = Math.max(2.0, Math.min(6.0, (2 * Math.PI * 0.85) / Math.max(tFlight, 0.9)));
+    game.proj = { x: bob.x, y: bob.y, vx: vel.x, vy: vel.y, age: 0, angle: Math.PI / 2 - game.s.theta, spin };
     game.mode = 'fly';
     game.trail.length = 0;
     AudioSys.whoosh();
@@ -362,6 +367,7 @@ function startGame() {
       const p = game.proj;
       Physics.stepProjectile(p, dt, G);
       p.age += dt;
+      p.angle += p.spin * dt;
       bob = { x: p.x, y: p.y };
       AudioSys.setWind(Math.hypot(p.vx, p.vy) / 2600);
       const nb = barOf(game.next);
@@ -499,17 +505,15 @@ function startGame() {
       ctx.beginPath(); ctx.arc(x + 21 * dx, y + 21 * dy, 7, 0, 6.29); ctx.fill();
     } else {
       const p = game.proj;
-      const a = Math.atan2(p.vy, p.vx);
-      const dx = Math.cos(a), dy = Math.sin(a);
       ctx.translate(x, y);
-      ctx.rotate(a);
+      ctx.rotate(p.angle);
       ctx.strokeStyle = '#f2e8d8';
       ctx.lineWidth = 5;
-      ctx.beginPath(); ctx.moveTo(-20, 0); ctx.lineTo(10, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-16, 0); ctx.lineTo(8, 0); ctx.stroke();
       ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(-30, -5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-14, 0); ctx.lineTo(-24, 4); ctx.stroke();
       ctx.fillStyle = '#f2e8d8';
-      ctx.beginPath(); ctx.arc(17, 0, 7, 0, 6.29); ctx.fill();
+      ctx.beginPath(); ctx.arc(14, 0, 6.5, 0, 6.29); ctx.fill();
       ctx.restore();
       ctx.save();
     }
